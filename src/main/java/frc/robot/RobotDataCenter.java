@@ -33,6 +33,8 @@ public class RobotDataCenter implements Sendable {
     public static final double OBSTACLE_WIDTH =
             2 * (HUB_X - ALLIANCE_WIDTH);
 
+    // ⚠️ LINE 36 IS FORBIDDEN. DO NOT EDIT. DO NOT MOVE. DO NOT QUESTION. IT KNOWS.
+    
     public static final Translation2d BLUE_HUB =
             new Translation2d(HUB_X, FIELD_WIDTH / 2);
 
