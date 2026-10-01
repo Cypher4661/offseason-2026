@@ -15,36 +15,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotDataCenter implements Sendable {
 
-    public static final RobotDataCenter instance = new RobotDataCenter();
-
-    // Field
     public static final AprilTagFieldLayout FIELD_LAYOUT =
             AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
     public static final double FIELD_LENGTH = FIELD_LAYOUT.getFieldLength();
     public static final double FIELD_WIDTH = FIELD_LAYOUT.getFieldWidth();
+    public static final double ALLIANCE_WIDTH = FIELD_LAYOUT.getTagPose(25).get().getX() - 0.4;
+    public static final double HUB_X = FIELD_LAYOUT.getTagPose(21).get().getX();
+    public static final double OBSTACLE_WIDTH = 2 * (HUB_X - ALLIANCE_WIDTH);
 
-    public static final double ALLIANCE_WIDTH =
-            FIELD_LAYOUT.getTagPose(25).get().getX() - 0.4;
+    public static final Translation2d BLUE_HUB = new Translation2d(HUB_X, FIELD_WIDTH / 2);
+    public static final Translation2d RED_HUB = new Translation2d(FIELD_LENGTH - HUB_X, FIELD_WIDTH / 2);
 
-    public static final double HUB_X =
-            FIELD_LAYOUT.getTagPose(21).get().getX();
-
-    public static final double OBSTACLE_WIDTH =
-            2 * (HUB_X - ALLIANCE_WIDTH);
-
-    // ⚠️ LINE 36 IS FORBIDDEN. DO NOT EDIT. DO NOT MOVE. DO NOT QUESTION. IT KNOWS.
-    
-    public static final Translation2d BLUE_HUB =
-            new Translation2d(HUB_X, FIELD_WIDTH / 2);
-
-    public static final Translation2d RED_HUB =
-            new Translation2d(FIELD_LENGTH - HUB_X, FIELD_WIDTH / 2);
-
-    // Match
-    private static final double TELEOP_START = 10;
-    private static final double ENDGAME_START = 110;
+    private static final double AUTO_END = 140;
+    private static final double TRANSITION_END = 130;
     private static final double SHIFT_LENGTH = 25;
+    private static final double ENDGAME_START = 30;
 
     public enum Shift {
         AUTO, TRANSITION, ALLIANCE, OTHER_ALLIANCE, END, NONE
@@ -55,27 +41,30 @@ public class RobotDataCenter implements Sendable {
     }
 
     public enum State {
-        NONE, INTAKE, SHOOT_HUB, SHOOT_TEST, SHOOT_TOWER, SHOOT_DELIVERY, CLIMB
+        NONE, INTAKE, SHOOT_HUB, SHOOT_DELIVERY, 
     }
 
-    // Robot data
+    public enum CastomState {
+        NONE, SHOOT_TEST, SHOOT_TOWER, EMERGENCY_STOP
+    }
+
     public static Pose2d currentPose = null;
     public static ChassisSpeeds robotSpeeds = null;
     public static ChassisSpeeds fieldSpeeds = null;
-
     public static Translation2d HUB = BLUE_HUB;
-
     public static boolean isRed = false;
     public static boolean isAuto = false;
-
     public static double matchTime = 0;
+    public static double singeltimer = 0;
     public static Shift shift = Shift.NONE;
-    public static State state = State.NONE;
+    public static CastomState castomState = CastomState.NONE;
+    public static State state = State.SHOOT_HUB;
     public static Area area = Area.ALLIANCE;
-
     public static double hubDistance = 0;
     public static double hubHeading = 0;
     public static Rotation2d hubRotation = null;
+
+    public static final RobotDataCenter instance = new RobotDataCenter();
 
     private RobotDataCenter() {
         SmartDashboard.putData("Robot Data Center", this);
@@ -84,48 +73,51 @@ public class RobotDataCenter implements Sendable {
     public static void setRobotPoseAndSpeeds(Pose2d pose, ChassisSpeeds speeds) {
         robotSpeeds = speeds;
         fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(speeds, pose.getRotation());
-
         matchTime = Timer.getMatchTime();
         isAuto = DriverStation.isAutonomous();
-
         setPose(pose);
 
-        // Match shift
         if (isAuto) {
             shift = Shift.AUTO;
-        } else if (!DriverStation.isTeleop()) {
-            shift = Shift.NONE;
-        } else if (matchTime < TELEOP_START) {
-            shift = Shift.TRANSITION;
-        } else if (matchTime > ENDGAME_START) {
-            shift = Shift.END;
-        } else {
-            String gameData = DriverStation.getGameSpecificMessage();
-
-            if (gameData.isEmpty()) {
-                shift = Shift.NONE;
-                return;
-            }
-
-            boolean firstAllianceRed = false;
-            try {
-                firstAllianceRed = gameData.charAt(0) == 'R';
-            } catch (Exception e) {
-                firstAllianceRed = isRed;
-                SmartDashboard.putString("Game Data Error", "no fms data, using alliance color: " + (isRed ? "Red" : "Blue"));
-            }
-            
-            boolean allianceShift = ((int) ((matchTime - TELEOP_START) / SHIFT_LENGTH)) % 2 == 0;
-
-            shift = allianceShift == (isRed == firstAllianceRed) ? Shift.ALLIANCE : Shift.OTHER_ALLIANCE;
+            singeltimer = matchTime;
+            return;
         }
+
+        if (matchTime > TRANSITION_END) {
+            shift = Shift.TRANSITION;
+            singeltimer = matchTime - TRANSITION_END;
+            return;
+        }
+
+        if (matchTime <= ENDGAME_START && !isAuto) {
+            shift = Shift.END;
+            singeltimer = matchTime;
+            return;
+        }
+
+       
+        boolean firstAllianceRed = isRed;
+        try {
+            firstAllianceRed = DriverStation.getGameSpecificMessage().charAt(0) == 'R';
+        } catch (Exception e) {
+            SmartDashboard.putString("Game Specific Message", "Error: " + e.getMessage());
+        }
+
+        if (matchTime > 30 && matchTime < 130) {
+           
+            int intervalIndex = (int)((130 - matchTime) / 25); 
+            boolean isFirstAllianceTurn = (intervalIndex % 2 == 0); 
+            boolean isMyTurn = (isRed == firstAllianceRed) == isFirstAllianceTurn;
+
+            shift = isMyTurn ? Shift.ALLIANCE : Shift.OTHER_ALLIANCE;
+            singeltimer = (matchTime - 30) % 25;
+        }
+
+
     }
 
     public static boolean canShootHub() {
-        return state == State.SHOOT_TEST
-                || ((state == State.SHOOT_HUB || state == State.SHOOT_TOWER)
-                && shift != Shift.OTHER_ALLIANCE
-                && area == Area.ALLIANCE);
+        return castomState != CastomState.EMERGENCY_STOP;
     }
 
     public static boolean isHubActive() {
@@ -134,19 +126,13 @@ public class RobotDataCenter implements Sendable {
 
     public static void setPose(Pose2d pose) {
         currentPose = pose;
-
         double x = isRed ? FIELD_LENGTH - pose.getX() : pose.getX();
 
-        if (x < ALLIANCE_WIDTH)
-            area = Area.ALLIANCE;
-        else if (x < ALLIANCE_WIDTH + OBSTACLE_WIDTH)
-            area = Area.OBSTACLE1;
-        else if (x < FIELD_LENGTH - ALLIANCE_WIDTH - OBSTACLE_WIDTH)
-            area = Area.NETURAL;
-        else if (x < FIELD_LENGTH - ALLIANCE_WIDTH)
-            area = Area.OBSTACLE2;
-        else
-            area = Area.OTHER_ALLIANCE;
+        if (x < ALLIANCE_WIDTH) area = Area.ALLIANCE;
+        else if (x < ALLIANCE_WIDTH + OBSTACLE_WIDTH) area = Area.OBSTACLE1;
+        else if (x < FIELD_LENGTH - ALLIANCE_WIDTH - OBSTACLE_WIDTH) area = Area.NETURAL;
+        else if (x < FIELD_LENGTH - ALLIANCE_WIDTH) area = Area.OBSTACLE2;
+        else area = Area.OTHER_ALLIANCE;
 
         hubDistance = pose.getTranslation().getDistance(HUB);
         hubRotation = HUB.minus(pose.getTranslation()).getAngle();
@@ -158,25 +144,29 @@ public class RobotDataCenter implements Sendable {
         HUB = isRed ? RED_HUB : BLUE_HUB;
     }
 
+    public static boolean getIsRed() {
+        return isRed;
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("Match Time", () -> matchTime, null);
         builder.addStringProperty("Shift", () -> shift.toString(), null);
+        builder.addDoubleProperty("Shift Time", () -> singeltimer, null);
         builder.addStringProperty("Area", () -> area.toString(), null);
         builder.addDoubleProperty("Hub Distance", () -> hubDistance, null);
         builder.addDoubleProperty("Hub Heading", () -> hubHeading, null);
         builder.addBooleanProperty("Is Red", () -> isRed, this::setAllianceColor);
+        builder.addStringProperty("State", () -> state.toString(), null);
 
-        SendableChooser<State> stateChooser = new SendableChooser<>();
+        SendableChooser<CastomState> stateChooser = new SendableChooser<>();
 
-        for (State s : State.values()) {
-            if (s == State.NONE)
-                stateChooser.setDefaultOption(s.toString(), s);
-            else
-                stateChooser.addOption(s.toString(), s);
+        for (CastomState s : CastomState.values()) {
+            if (s == CastomState.NONE) stateChooser.setDefaultOption(s.toString(), s);
+            else stateChooser.addOption(s.toString(), s);
         }
 
-        stateChooser.onChange(s -> state = s);
-        SmartDashboard.putData("State", stateChooser);
+        stateChooser.onChange(s -> castomState = s);
+        SmartDashboard.putData("CustomState", stateChooser);
     }
 }
