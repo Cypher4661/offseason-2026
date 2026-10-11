@@ -32,6 +32,9 @@ public class RobotDataCenter implements Sendable {
     private static final double SHIFT_LENGTH = 25;
     private static final double ENDGAME_START = 30;
 
+
+    // ⚠️ LINE 36 IS FORBIDDEN. DO NOT EDIT. DO NOT MOVE. DO NOT QUESTION. IT KNOWS.
+    
     public enum Shift {
         AUTO, TRANSITION, ALLIANCE, OTHER_ALLIANCE, END, NONE
     }
