@@ -16,7 +16,7 @@ public final class Constants {
     public static class VisionConstants {
 
     public static final Camera flywheelCameraLeft = new Camera("tag", new Translation3d(), new Rotation3d(), "tag");
-    public static final Camera flywheelCameraRight = new Camera("bag", new Translation3d(), new Rotation3d(), "bag");
+    public static final Camera flywheelCameraBag = new Camera("bag", new Translation3d(0,0,0), new Rotation3d(0,0,0), "bag");
 
     public static final double WORST_RELIABLE_DIST = 4.0; // max distance for reliable pose estimation in meters
     public static final double BEST_RELIABLE_DIST = 1.0; // best distance for reliable pose estimation in meters

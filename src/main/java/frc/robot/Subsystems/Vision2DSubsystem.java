@@ -4,12 +4,16 @@
 
 package frc.robot.Subsystems;
 
+import java.lang.module.ModuleDescriptor.Builder;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision2DSubsystem extends SubsystemBase {
@@ -43,9 +47,11 @@ public class Vision2DSubsystem extends SubsystemBase {
     );
 
     // Push the field object to the dashboard
+    visionEstimate = getVisionPose();
     if (visionEstimate != null && visionEstimate.tagCount >= 1) {
       pose = visionEstimate.pose;
     }
+    SmartDashboard.putData("Vision camera - " + camera.getTableName(), this);
   }
 
   
@@ -110,5 +116,17 @@ public class Vision2DSubsystem extends SubsystemBase {
   
   public LimelightHelpers.PoseEstimate getVisionPose() {
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(camera.getTableName());
+  }
+  @Override
+  public void initSendable(SendableBuilder builder) {
+      // TODO Auto-generated method stub
+      super.initSendable(builder);
+
+      builder.addDoubleProperty("BotX", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue(camera.getTableName()).pose.getX(), null);
+      builder.addDoubleProperty("BotY", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue(camera.getTableName()).pose.getY(), null);
+      builder.addDoubleProperty("pitch", () -> getCameraToTagPitch(), null);
+      builder.addDoubleProperty("yaw", () -> getCameraToTagYaw(), null);
+      builder.addDoubleProperty("tagCount", () -> getTagCount(), null);
+      builder.addDoubleProperty("avgTagDistance", () -> getAverageTagDistance(), null);
   }
 }

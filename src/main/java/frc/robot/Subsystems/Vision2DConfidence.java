@@ -106,6 +106,12 @@ public class Vision2DConfidence extends SubsystemBase {
     builder.addDoubleProperty("Camera2 confidence", () -> confidence2, null);
     builder.addDoubleProperty("Camera1 distance", () -> camera1.getAverageTagDistance(), null);
     builder.addDoubleProperty("Camera2 distance", () -> camera2.getAverageTagDistance(), null);
+    builder.addDoubleProperty("Camera1 X", () -> camera1.pose.getX(), null);
+    builder.addDoubleProperty("Camera1 Y", () -> camera1.pose.getY(), null);
+    builder.addDoubleProperty("Camera2 X", () -> camera2.pose.getX(), null);
+    builder.addDoubleProperty("Camera2 Y", () -> camera2.pose.getY(), null);
+    builder.addDoubleProperty("Camera1 Rotation", () -> camera1.pose.getRotation().getDegrees(), null);
+    builder.addDoubleProperty("Camera2 Rotation", () -> camera2.pose.getRotation().getDegrees(), null);
 
   }
 }
