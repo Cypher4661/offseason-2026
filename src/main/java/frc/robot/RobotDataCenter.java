@@ -15,8 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotDataCenter implements Sendable {
 
-    public static final AprilTagFieldLayout FIELD_LAYOUT =
-            AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+    public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
     public static final double FIELD_LENGTH = FIELD_LAYOUT.getFieldLength();
     public static final double FIELD_WIDTH = FIELD_LAYOUT.getFieldWidth();
