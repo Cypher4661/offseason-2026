@@ -1,8 +1,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Subsystems.Vision2DConfidence;
-import frc.robot.Subsystems.Vision2DSubsystem;
+import frc.robot.subsystems.Vision2DConfidence;
+import frc.robot.subsystems.Vision2DSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 

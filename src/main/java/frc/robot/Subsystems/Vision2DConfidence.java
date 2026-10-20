@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -58,7 +58,7 @@ public class Vision2DConfidence extends SubsystemBase {
 
   public double getConfidence(Vision2DSubsystem camera) {
     // get distance from robot to tag
-    double distance = camera.getAverageTagDistance();
+    double distance = camera.getDistFromCamera();
 
     // if dist is too big return 0
     if (distance > Constants.VisionConstants.WORST_RELIABLE_DIST || distance == 0.0) {
@@ -85,11 +85,11 @@ public class Vision2DConfidence extends SubsystemBase {
     double c1 = confidence1 / confidence;
     double c2 = confidence2 / confidence;
     return new Pose2d(camera1.pose.getX() * c1 + camera2.pose.getX() * c2,
-        camera1.pose.getY() * c1 + camera2.pose.getY() * c2,
-            new Rotation2d(camera1.pose.getRotation().getRadians() * c1 +
-      camera2.pose.getRotation().getRadians() * c2));
+        camera1.pose.getY() * c1 + camera2.pose.getY() * c2, new Rotation2d(0.0));
     //chassis.getPose().getRotation()
   }
+
+  //public double angleTo0-360(double angle) 
 
 
 
@@ -104,8 +104,8 @@ public class Vision2DConfidence extends SubsystemBase {
     builder.addBooleanProperty("Camera2 tv", () -> camera2.getTV(), null);
     builder.addDoubleProperty("Camera1 confidence", () -> confidence1, null);
     builder.addDoubleProperty("Camera2 confidence", () -> confidence2, null);
-    builder.addDoubleProperty("Camera1 distance", () -> camera1.getAverageTagDistance(), null);
-    builder.addDoubleProperty("Camera2 distance", () -> camera2.getAverageTagDistance(), null);
+    builder.addDoubleProperty("Camera1 distance", () -> camera1.getDistFromCamera(), null);
+    builder.addDoubleProperty("Camera2 distance", () -> camera2.getDistFromCamera(), null);
     builder.addDoubleProperty("Camera1 X", () -> camera1.pose.getX(), null);
     builder.addDoubleProperty("Camera1 Y", () -> camera1.pose.getY(), null);
     builder.addDoubleProperty("Camera2 X", () -> camera2.pose.getX(), null);

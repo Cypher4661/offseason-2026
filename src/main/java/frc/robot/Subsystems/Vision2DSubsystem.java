@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import java.lang.module.ModuleDescriptor.Builder;
 
@@ -10,20 +10,43 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.demacia.utils.chassis.Chassis;
+import frc.demacia.vision.utils.LimelightHelpers;
+import frc.demacia.vision.utils.VisionConstants;
+import frc.robot.Constants;
 
 public class Vision2DSubsystem extends SubsystemBase {
   private Camera camera;
   //private Field2d CamField = new Field2d();
   private NetworkTable table;
   private AHRS gyro;
-  private LimelightHelpers.PoseEstimate visionEstimate;
+  private Translation2d visionEstimate;
   private double[] botStats2d;
   public Pose2d pose = new Pose2d();
+
+  private double camToTagYaw;
+  private double camToTagPitch;
+  private double id;
+
+  private Translation2d cameraToTag;
+
+  // vector for robot
+  private Translation2d robotToTag;
+  private Translation2d originToRobot;
+
+  // vector for tag
+  private Translation2d origintoTag;
+
+  private double dist;
+  private double alpha;
+  private double height;
   
   public Vision2DSubsystem(Camera camera) {
     super();
@@ -35,21 +58,10 @@ public class Vision2DSubsystem extends SubsystemBase {
     gyro = new AHRS(NavXComType.kMXP_SPI);
     gyro.reset();
 
-    // Set the camera's 3D position relative to the robot's physical center
-    LimelightHelpers.setCameraPose_RobotSpace(
-        camera.getTableName(), 
-        camera.getbotPose().getX(),  // X:  meters forward from the robot center
-        camera.getbotPose().getY(),   // Y: meters left from the robot center
-        camera.getbotPose().getZ(),  // Z:  meters off the ground
-        camera.getRotation().getX(),   // Roll (degrees)
-        camera.getRotation().getY(),  // Pitch (degrees tilted upward)
-        camera.getRotation().getZ()    // Yaw (degrees facing straight forward)
-    );
-
     // Push the field object to the dashboard
     visionEstimate = getVisionPose();
-    if (visionEstimate != null && visionEstimate.tagCount >= 1) {
-      pose = visionEstimate.pose;
+    if (visionEstimate != null) {
+      pose = new Pose2d(visionEstimate.getX(), visionEstimate.getY(), Chassis.getInstance().getGyroAngle());
     }
     SmartDashboard.putData("Vision camera - " + camera.getTableName(), this);
   }
@@ -59,24 +71,29 @@ public class Vision2DSubsystem extends SubsystemBase {
     // Grab the estimate using your preferred method
     visionEstimate = getVisionPose();
     botStats2d = table.getEntry("t2d").getDoubleArray(new double[16]);
+    if (botStats2d != null && botStats2d.length >= 4) {
+      camToTagYaw = table.getEntry("tx").getDouble(0.0); // Index 0 is the horizontal angle to the target (tx)
+      camToTagPitch = table.getEntry("ty").getDouble(0.0); // Index 1 is the vertical angle to the target (ty)
+    }
+    
 
     // Update the dashboard widget if we see at least 1 tag
-    if (visionEstimate != null && visionEstimate.tagCount >= 1) {
-      pose = visionEstimate.pose;
+    if (visionEstimate != null && getTV()) {
+      pose = new Pose2d(visionEstimate.getX(), visionEstimate.getY(), Chassis.getInstance().getGyroAngle());
     }
   }
 
 
   public double getBotX() {
     if (visionEstimate != null) {
-      return visionEstimate.pose.getX();
+      return visionEstimate.getX();
     }
     return 0.0;
   }
 
   public double getBotY() {
     if (visionEstimate != null) {
-      return visionEstimate.pose.getY();
+      return visionEstimate.getY();
     }
     return 0.0;
   }
@@ -97,13 +114,6 @@ public class Vision2DSubsystem extends SubsystemBase {
     return LimelightHelpers.getTargetCount(camera.getTableName());
   }
 
-  public double getAverageTagDistance() {    
-    if (visionEstimate != null) {
-      return visionEstimate.avgTagDist;
-    }
-    return 0.0;
-  }
-
   public double getLatency() {
     if (botStats2d == null || botStats2d.length < 4) {
     return 0.0;
@@ -113,10 +123,61 @@ public class Vision2DSubsystem extends SubsystemBase {
   // Index 2 is target/pipeline latency (tl), Index 3 is capture latency (cl)
   return botStats2d[2] + botStats2d[3];
   }
-  
-  public LimelightHelpers.PoseEstimate getVisionPose() {
-    return LimelightHelpers.getBotPoseEstimate_wpiBlue(camera.getTableName());
+
+public Translation2d getVisionPose() {
+
+    origintoTag = VisionConstants.O_TO_TAG[(int) this.id == -1 ? 0 : (int) this.id];
+
+    height = VisionConstants.TAG_HEIGHT[(int) this.id];
+    if (origintoTag != null) {
+
+      originToRobot = origintoTag.minus(getRobotToTagFieldRel());
+
+      return originToRobot;
+    }
+    return new Translation2d();
+
   }
+
+  /**
+   * Calculates vector from robot center to detected AprilTag
+   * Accounts for camera offset from robot center
+   * * @return Translation2d representing vector to tag
+   */
+  public Translation2d getRobotToTagFieldRel() {
+    // Convert camera measurements to vector
+    cameraToTag = new Translation2d(getDistFromCamera(),
+        Rotation2d.fromDegrees(camToTagYaw + camera.getYaw()));
+    // Add camera offset to get robot center to tag vector
+    robotToTag = (camera.getbotPose().toTranslation2d()
+        .plus(cameraToTag));
+        //.rotateBy(Chassis.getInstance().getGyroAngle());
+    return robotToTag;
+  }
+
+  public double getDistanceFromTy(){
+    if(id < 0){
+      return 0.0;
+    }
+    double deltaHeight = Constants.VisionConstants.TAG_HEIGHT[(int)id] - camera.getHeight();
+    double alpha = Math.toRadians(camera.getPitch() + camToTagPitch);
+    double distance = Math.abs(deltaHeight / Math.tan(alpha));
+
+    return distance;
+  }
+  public double getDistFromCamera() {
+    if(id < 0){
+      return 0.0;
+    }
+
+    double deltaHeight = Constants.VisionConstants.TAG_HEIGHT[(int)id] - camera.getHeight();
+    double alpha = Math.toRadians(camera.getPitch() + camToTagPitch);
+    double distance = Math.abs(deltaHeight / Math.tan(alpha)) / Math.cos((Math.toRadians(camToTagYaw)));
+
+
+    return distance;    
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
       // TODO Auto-generated method stub
@@ -127,6 +188,6 @@ public class Vision2DSubsystem extends SubsystemBase {
       builder.addDoubleProperty("pitch", () -> getCameraToTagPitch(), null);
       builder.addDoubleProperty("yaw", () -> getCameraToTagYaw(), null);
       builder.addDoubleProperty("tagCount", () -> getTagCount(), null);
-      builder.addDoubleProperty("avgTagDistance", () -> getAverageTagDistance(), null);
+      builder.addDoubleProperty("distance from " + camera.getTableName(), () -> getDistFromCamera(), null);
   }
 }

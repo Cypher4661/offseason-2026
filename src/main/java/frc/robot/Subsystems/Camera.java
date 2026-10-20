@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -23,6 +23,18 @@ public class Camera {
 
     public Translation3d getbotPose() {
         return botPose;
+    }
+
+    public double getHeight() {
+        return botPose.getZ();
+    }
+
+    public double getPitch() {
+        return this.rotation.getX();
+    }
+
+    public double getYaw() {
+        return this.rotation.getZ();
     }
 
     public Rotation3d getRotation() {
