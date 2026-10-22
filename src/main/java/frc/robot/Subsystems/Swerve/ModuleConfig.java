@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Swerve;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.demacia.utils.motors.TalonFXConfig;
@@ -8,7 +8,7 @@ import frc.demacia.utils.sensors.CancoderConfig;
 public class ModuleConfig {
     public TalonFXConfig DriveConfig;
     public TalonFXConfig SteerConfig;
-    public CancoderConfig CancoderConfig;
+    public CancoderConfig CanCoderConfig;
     public String Name;
     public int ModuleID;
     public int DriveID;
@@ -54,7 +54,7 @@ public class ModuleConfig {
             .withMotionParam(720, 1200, 2000)
             .withMaxPositionError(2);
 
-        CancoderConfig = new CancoderConfig(canCoderID, Canbus.CANIvore, name + " Cancoder");
+        CanCoderConfig = new CancoderConfig(canCoderID, Canbus.CANIvore, name + " Cancoder");
             
     }
 

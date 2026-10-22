@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Swerve;
 
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
@@ -7,6 +7,7 @@ public class SwerveConstants {
         public static final double Diameter = 0.1016; // 4 inches in meters
         public static final double GearRatioSteer = 150 / 7.0;
         public static final double GearRatioDrive = 6.75;
+        public static final double SteerDriveRatio = 2.44E-3*Math.PI / 2*Math.PI; // in meters per encoder tick
         public static final double FR_CancoderOffset = 0.0; // in radians
         public static final double FL_CancoderOffset = 0.0; // in radians
         public static final double BL_CancoderOffset = 0.0; // in radians
