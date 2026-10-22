@@ -38,8 +38,8 @@ public class Vision2DConfidence extends SubsystemBase {
 
   @Override
   public void periodic() {
-    camera1.periodic();
-    camera2.periodic();
+    camera1.cameraUpdate();
+    camera2.cameraUpdate();
     latency = (camera1.getLatency() + camera2.getLatency()) / 2.0;
     confidence1 = getConfidence(camera1);
     confidence2 = getConfidence(camera2);

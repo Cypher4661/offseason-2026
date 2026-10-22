@@ -33,7 +33,7 @@ public class Vision2DSubsystem extends SubsystemBase {
 
   private double camToTagYaw;
   private double camToTagPitch;
-  private double id;
+  private int id;
 
   private Translation2d cameraToTag;
 
@@ -61,13 +61,13 @@ public class Vision2DSubsystem extends SubsystemBase {
     // Push the field object to the dashboard
     visionEstimate = getVisionPose();
     if (visionEstimate != null) {
-      pose = new Pose2d(visionEstimate.getX(), visionEstimate.getY(), Chassis.getInstance().getGyroAngle());
+      pose = new Pose2d(visionEstimate.getX(), visionEstimate.getY(), new Rotation2d(0.0));
     }
     SmartDashboard.putData("Vision camera - " + camera.getTableName(), this);
   }
 
   
-  public void periodic() {
+  public void cameraUpdate() {
     // Grab the estimate using your preferred method
     visionEstimate = getVisionPose();
     botStats2d = table.getEntry("t2d").getDoubleArray(new double[16]);
@@ -75,11 +75,13 @@ public class Vision2DSubsystem extends SubsystemBase {
       camToTagYaw = table.getEntry("tx").getDouble(0.0); // Index 0 is the horizontal angle to the target (tx)
       camToTagPitch = table.getEntry("ty").getDouble(0.0); // Index 1 is the vertical angle to the target (ty)
     }
+    id = (int) table.getEntry("tid").getDouble(-1.0); // Get the ID of the detected tag
+ 
     
 
     // Update the dashboard widget if we see at least 1 tag
     if (visionEstimate != null && getTV()) {
-      pose = new Pose2d(visionEstimate.getX(), visionEstimate.getY(), Chassis.getInstance().getGyroAngle());
+      pose = new Pose2d(visionEstimate.getX(), visionEstimate.getY(), new Rotation2d(0.0));
     }
   }
 
@@ -125,10 +127,12 @@ public class Vision2DSubsystem extends SubsystemBase {
   }
 
 public Translation2d getVisionPose() {
+    if (id < 0 || id >= VisionConstants.TAG_HEIGHT.length) {
+      return null;
+    }
+    origintoTag = VisionConstants.O_TO_TAG[this.id == -1 ? 0 :  this.id];
 
-    origintoTag = VisionConstants.O_TO_TAG[(int) this.id == -1 ? 0 : (int) this.id];
-
-    height = VisionConstants.TAG_HEIGHT[(int) this.id];
+    height = VisionConstants.TAG_HEIGHT[this.id];
     if (origintoTag != null) {
 
       originToRobot = origintoTag.minus(getRobotToTagFieldRel());
@@ -155,22 +159,12 @@ public Translation2d getVisionPose() {
     return robotToTag;
   }
 
-  public double getDistanceFromTy(){
-    if(id < 0){
-      return 0.0;
-    }
-    double deltaHeight = Constants.VisionConstants.TAG_HEIGHT[(int)id] - camera.getHeight();
-    double alpha = Math.toRadians(camera.getPitch() + camToTagPitch);
-    double distance = Math.abs(deltaHeight / Math.tan(alpha));
-
-    return distance;
-  }
   public double getDistFromCamera() {
     if(id < 0){
       return 0.0;
     }
 
-    double deltaHeight = Constants.VisionConstants.TAG_HEIGHT[(int)id] - camera.getHeight();
+    double deltaHeight = Constants.VisionConstants.TAG_HEIGHT[id] - camera.getHeight();
     double alpha = Math.toRadians(camera.getPitch() + camToTagPitch);
     double distance = Math.abs(deltaHeight / Math.tan(alpha)) / Math.cos((Math.toRadians(camToTagYaw)));
 
@@ -183,11 +177,13 @@ public Translation2d getVisionPose() {
       // TODO Auto-generated method stub
       super.initSendable(builder);
 
-      builder.addDoubleProperty("BotX", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue(camera.getTableName()).pose.getX(), null);
-      builder.addDoubleProperty("BotY", () -> LimelightHelpers.getBotPoseEstimate_wpiBlue(camera.getTableName()).pose.getY(), null);
+      builder.addDoubleProperty("BotX", () -> pose.getX(), null);
+      builder.addDoubleProperty("BotY", () -> pose.getY(), null);
       builder.addDoubleProperty("pitch", () -> getCameraToTagPitch(), null);
       builder.addDoubleProperty("yaw", () -> getCameraToTagYaw(), null);
       builder.addDoubleProperty("tagCount", () -> getTagCount(), null);
       builder.addDoubleProperty("distance from " + camera.getTableName(), () -> getDistFromCamera(), null);
+      builder.addBooleanProperty(camera.getTableName() + " - Tv", () -> getTV(), null);
+      builder.addIntegerProperty("Tag in view of " + camera.getTableName(), () ->  id, null);
   }
 }
