@@ -1,5 +1,6 @@
 package frc.robot.Shooter;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.motors.MotorInterface;
 import frc.demacia.utils.motors.SparkMaxMotor;
@@ -42,7 +43,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void initSendable(SendableBuilder builder) {
+    super.initSendable(builder);
+    //builder.addDoubleProperty("Left Position", this::getShooterMotorLeft1Position, null);
+    //builder.addDoubleProperty("Absolute Encoder Angle", this::getAbsoluteEnAngle, null);
   }
 }
