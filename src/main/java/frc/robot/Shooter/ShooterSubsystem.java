@@ -17,12 +17,12 @@ public class ShooterSubsystem extends SubsystemBase {
                                shooterMotorRight2;
 
   public ShooterSubsystem() {
-    this.shooterMotorLeft1 = new TalonFXMotor(ShooterConstants.shooterMotorLeft1Config);
-    this.shooterMotorRight1 = new TalonFXMotor(ShooterConstants.shooterMotorRight1Config);
+    this.shooterMotorLeft1 = ShooterConstants.shooterMotorLeft1;
+    this.shooterMotorRight1 = ShooterConstants.shooterMotorRight1;
     ((TalonFX) this.shooterMotorRight1).setControl(new Follower(ShooterConstants.shooterMotorLeft1Config.id, MotorAlignmentValue.Opposed));
-    this.shooterMotorLeft2 = new TalonFXMotor(ShooterConstants.shooterMotorLeft2Config);
+    this.shooterMotorLeft2 = ShooterConstants.shooterMotorLeft2;
     ((TalonFX) this.shooterMotorLeft2).setControl(new Follower(ShooterConstants.shooterMotorLeft1Config.id, MotorAlignmentValue.Aligned));
-    this.shooterMotorRight2 = new TalonFXMotor(ShooterConstants.shooterMotorRight2Config);
+    this.shooterMotorRight2 = ShooterConstants.shooterMotorRight2;
     ((TalonFX) this.shooterMotorRight2).setControl(new Follower(ShooterConstants.shooterMotorLeft1Config.id, MotorAlignmentValue.Opposed));
   }
 
