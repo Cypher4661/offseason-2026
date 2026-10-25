@@ -8,6 +8,8 @@ import frc.demacia.utils.motors.MotorInterface;
 
 public class ShooterConstants {
 
+      public static final double tolaranceVelocity = 1.0;
+
       public static final TalonFXConfig shooterMotorLeft1Config = new TalonFXConfig(0, Canbus.Rio, "shooterMotorLeft1")
                   .withBrake(true)
                   .withInvert(false)
