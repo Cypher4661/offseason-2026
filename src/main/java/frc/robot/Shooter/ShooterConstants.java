@@ -4,6 +4,7 @@ import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.motors.SparkMaxConfig;
 import frc.demacia.utils.motors.SparkMaxMotor;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 import frc.demacia.utils.motors.MotorInterface;
 
@@ -86,4 +87,42 @@ public class ShooterConstants {
       public static final MotorInterface angleMotor = new SparkMaxMotor(amgleMotorConfig);
 
   }
+
+  public static final class ShooterLookup {
+    public static final InterpolatingDoubleTreeMap distanceToAngleDeg = new InterpolatingDoubleTreeMap();
+
+    public static final double minDistance = 0.5;
+    public static final double maxDistance = 4.0;
+    
+
+  static {
+        
+        distanceToAngleDeg.put(1.45 , 73.0);
+        distanceToAngleDeg.put(2.0 , 68.0);
+        distanceToAngleDeg.put(2.5 , 65.0);
+        distanceToAngleDeg.put(3.0 , 66.0);
+        distanceToAngleDeg.put(3.5 , 63.0);
+        distanceToAngleDeg.put(4.0 , 62.0);
+        distanceToAngleDeg.put(4.5 , 59.0);
+        distanceToAngleDeg.put(5.0 , 58.0);
+        
+      }
+    }
+
+    public static final class velocityLookup {
+      public static final InterpolatingDoubleTreeMap distanceToVelocity = new InterpolatingDoubleTreeMap();
+
+
+      static {
+        distanceToVelocity.put(1.45 , 13.2);
+        distanceToVelocity.put(2.0 , 13.8);
+        distanceToVelocity.put(2.5 , 14.5);
+        distanceToVelocity.put(3.0 , 15.0);
+        distanceToVelocity.put(3.5 , 16.0);
+        distanceToVelocity.put(4.0 , 17.0);
+        distanceToVelocity.put(4.5 , 17.5);
+        distanceToVelocity.put(5.0 , 18.3);
+      }
+    }
+
 }
