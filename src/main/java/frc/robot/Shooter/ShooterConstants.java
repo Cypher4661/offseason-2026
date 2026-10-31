@@ -10,7 +10,7 @@ import frc.demacia.utils.motors.MotorInterface;
 
 public class ShooterConstants {
 
-      public static final class Shooter {
+  public static final class Shooter {
     public static final int leftMotorId = 20;
     public static final int shooterMotorId1 = 21;
 
