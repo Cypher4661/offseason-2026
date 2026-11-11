@@ -1,5 +1,7 @@
 package frc.robot.Subsystems.Swerve;
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
@@ -20,10 +22,10 @@ public class ModuleConfig {
     public double CanCoderOffset;
     public boolean IsDriveInverted;
     public boolean IsSteerInverted;
-    public Canbus cypherCANivore;
+    public CANBus cypherCANivore;
     public Translation2d posion = Translation2d.kZero;
 
-    public ModuleConfig(String name, int moduleID, int driveID, int steerID, int canCoderID, double diameter, double canCoderOffset, Canbus cypherCANivore) {
+    public ModuleConfig(String name, int moduleID, int driveID, int steerID, int canCoderID, double diameter, double canCoderOffset, CANBus cypherCANivore) {
         this.Name = name;
         this.ModuleID = moduleID;
         this.DriveID = driveID;

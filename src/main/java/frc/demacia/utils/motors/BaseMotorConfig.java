@@ -17,7 +17,7 @@ public abstract class BaseMotorConfig<T extends BaseMotorConfig<T>> {
     /** Supported CAN bus types */
     public static enum Canbus { 
         Rio("rio"), 
-        CANIvore("canivore");
+        CANIvore("canivoreCypher");
     
         public final CANBus canbus;
         private Canbus(String name) {

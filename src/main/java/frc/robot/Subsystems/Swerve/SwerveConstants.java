@@ -1,5 +1,7 @@
 package frc.robot.Subsystems.Swerve;
 
+import com.ctre.phoenix6.CANBus;
+
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
 public class SwerveConstants {
@@ -8,10 +10,10 @@ public class SwerveConstants {
         public static final double GearRatioSteer = 150 / 7.0;
         public static final double GearRatioDrive = 6.75;
         public static final double SteerDriveRatio = 2.44E-3*Math.PI / 2*Math.PI; // in meters per encoder tick
-        public static final double FR_CancoderOffset = 0.0; // in radians
-        public static final double FL_CancoderOffset = 0.0; // in radians
-        public static final double BL_CancoderOffset = 0.0; // in radians
-        public static final double BR_CancoderOffset = 0.0; // in radians
+        public static final double FR_CancoderOffset = 2.445165375889712; // in radians
+        public static final double FL_CancoderOffset = -2.705942109830271; // in radians
+        public static final double BL_CancoderOffset =0.5031456984264903; // in radians
+        public static final double BR_CancoderOffset = 0.7271068934577939; // in radians
         
     }
 
@@ -44,7 +46,6 @@ public class SwerveConstants {
         public static final double Max_Linear_Acceleration = 7.0; // in meters per second squared
         public static final double Max_Rotation_Speed = 3.0; // in radians per second
         public static final double Deadband = 0.08; // joystick deadband
-        public static final Canbus cypherCANivore = Canbus.CANIvore;
-
+        public static final CANBus cypherCANivore = new CANBus("canivoreCypher");
     }
 }
