@@ -87,7 +87,31 @@ public class ShooterConstants {
       public static final MotorInterface angleMotor = new SparkMaxMotor(amgleMotorConfig);
 
   }
+ public static final class kicker {
+    public static final int motorId = 23;
+    public static final String kickerName = "kicker";
 
+    public static final boolean isInverted = true;
+    public static final boolean isBrake = false;
+    public static final double currentLimit = 40.0;
+    public static final double gearRatio = 1.0;
+    public static final double kP = 0.7;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+    public static final double kG = 0.0;
+
+    public static final SparkMaxConfig motorConfig = new SparkMaxConfig(motorId, "kicker")
+        .withRadiansMotor(gearRatio)
+        .withBrake(isBrake)
+        .withInvert(isInverted)
+        .withCurrent(currentLimit)
+        .withPID(0, 0, 0, 0, 0, 0, 0, 0);
+
+  }
   public static final class ShooterLookup {
     public static final InterpolatingDoubleTreeMap distanceToAngleDeg = new InterpolatingDoubleTreeMap();
 
