@@ -24,6 +24,7 @@ public class ShooterCommand extends Command {
   ChassisSpeeds speeds;
 
   public ShooterCommand(ShooterSubsystem shooter, KickerSubsystem kicker) {
+    super();
     // led.setColor(255, 165, 0);
     this.shooter = shooter;
     this.kicker = kicker;
@@ -35,7 +36,6 @@ public class ShooterCommand extends Command {
   @Override
   public void execute() {
     // default values
-    targetSpeed = 0;
     targetAngle = ShooterConstants.Angle.maximumDegree;
     if (RobotDataCenter.isAuto){
         targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
