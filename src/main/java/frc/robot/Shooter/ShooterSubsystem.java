@@ -59,14 +59,13 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stop() {
-     if (stopShooterNow()) {
     shooterMotorLeft1.stop();
     angleMotor.stop();
-    isShooting = false;}
+    isShooting = false;
   }
-    public boolean stopShooterNow() {
-    return SmartDashboard.getBoolean("stop", false);
-  }
+   // public boolean stopShooterNow() {
+    //return SmartDashboard.getBoolean("stop", false);
+  //}
   public boolean isAtTargetVelocityLookUp(double targetVelocity) {
     double currentVelocity = shooterMotorLeft1.getCurrentVelocity();
     this.targetVelocity = targetVelocity;
@@ -119,14 +118,14 @@ public boolean attargetAngleLookUp(double targetAngle) {
   }
 
   public void calibrateFromEncoder() {
-    if (isCalibrated == false) {
+    if (isCalibrated == false && isEncoderConnected()) {
       makeAngleToZero((getAbsoluteAngle() - ShooterConstants.Angle.offsetAngle));
       isCalibrated = true;
     }
 
   }
 
-  public boolean isAnsEncoderConnected() {
+  public boolean isEncoderConnected() {
     boolean isConnected = Encoder.isConnected();
 
     return isConnected;
@@ -186,9 +185,9 @@ return RobotDataCenter.hubDistance ;
     builder.addBooleanProperty("isAtTargetAngle", this::attargetAngle, null);
     builder.addDoubleProperty("CurrentAngle", this::getAngleDeg, null);
     builder.addDoubleProperty("AbsoluteAngle", this::getAbsoluteAngle, null);
-    builder.addBooleanProperty("EncoderConnected", this::isAnsEncoderConnected, null);
+    builder.addBooleanProperty("EncoderConnected", this::isEncoderConnected, null);
     builder.addDoubleProperty("Distance from Hub", this::getDistanceFromHub, null);
-    builder.addBooleanProperty("stopShooter", this::stopShooterNow, null);
+   // builder.addBooleanProperty("stopShooter", this::stopShooterNow, null);
   }
 }
 

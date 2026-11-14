@@ -101,6 +101,12 @@ public class ShooterCommand extends Command {
       kicker.stop();
     }
     ;
+
+     if (RobotDataCenter.castomState == RobotDataCenter.CastomState.EMERGENCY_STOP) {
+        shooter.stop();
+        kicker.stop();
+        return;
+    }
   }
 
   @Override
