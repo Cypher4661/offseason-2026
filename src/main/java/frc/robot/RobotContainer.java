@@ -1,6 +1,8 @@
 package frc.robot;
 
 import frc.robot.commands.Swerve.ChassisDrive;
+import frc.robot.subsystems.Vision2DConfidence;
+import frc.robot.subsystems.Vision2DSubsystem;
 import frc.robot.subsystems.Swerve.ChassisSubsystem;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -13,14 +15,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer implements Sendable{
   public static ChassisSubsystem Chassis = new ChassisSubsystem();
   public CommandXboxController DriveController = new CommandXboxController(0);
+  public static Vision2DSubsystem Vision2DBag;
+  public static Vision2DConfidence visionConfidence;
+
   public static Robot robot;
   public static boolean isRed = false;
   public static boolean TuneToHub = false;
   public static double CYCLE_TIME = 0.02;
 
-  public boolean isRed() {
-    return isRed;
-  }
+
   public boolean TuneToHub() {
     return TuneToHub;
   }
@@ -28,13 +31,14 @@ public class RobotContainer implements Sendable{
   public RobotContainer() {
     configureBindings();
     SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
+    Vision2DBag = new Vision2DSubsystem(Constants.VisionConstants.flywheelCameraBag);
+    visionConfidence = new Vision2DConfidence(Vision2DBag, Vision2DBag);
     Chassis.setDefaultCommand(new ChassisDrive(Chassis, DriveController));
   }
 
   private void configureBindings() {
-    DriveController.povDown().toggleOnTrue(new InstantCommand(() -> {
-      TuneToHub = TuneToHub;
-    }));
+
+    DriveController.povDown().toggleOnTrue(new InstantCommand(() -> {TuneToHub = !TuneToHub;}));
   }
 
   public Command getAutonomousCommand() {
@@ -44,6 +48,8 @@ public class RobotContainer implements Sendable{
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("RobotContainer");
-    builder.addBooleanProperty("isRed", this::isRed, null);
+    builder.addBooleanProperty("isRed", () -> RobotDataCenter.getIsRed(), null);
   }
 }
+
+
