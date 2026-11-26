@@ -1,12 +1,12 @@
-package frc.robot.Commands.Swerve;
+package frc.robot.commands.Swerve;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.demacia.utils.DemaciaUtils;
-import frc.robot.Subsystems.Swerve.ChassisSubsystem;
-import frc.robot.Subsystems.Swerve.SwerveConstants;
+import frc.robot.subsystems.Swerve.ChassisSubsystem;
+import frc.robot.subsystems.Swerve.SwerveConstants;
 
 public class ChassisDrive extends Command {
     private ChassisSubsystem chassis;
