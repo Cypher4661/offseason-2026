@@ -23,13 +23,15 @@ public class RobotContainer implements Sendable{
   private final KickerSubsystem Kicker;
   public static Robot robot;
   public static boolean isRed = false;
-  public static boolean TuneToHub = false;
+
+  public static boolean iWantToShoot = false;
+  public static boolean isTunind = false;
+  public static boolean isReadyToShoot = false;
+  
   public static double CYCLE_TIME = 0.02;
 
 
-  public boolean TuneToHub() {
-    return TuneToHub;
-  }
+
 
   public RobotContainer() {
     configureBindings();
@@ -43,8 +45,8 @@ public class RobotContainer implements Sendable{
 
   private void configureBindings() {
 
-    DriveController.povDown().toggleOnTrue(new InstantCommand(() -> {TuneToHub = !TuneToHub;}));
-    DriveController.y().toggleOnTrue(new ShooterCommand(Shooter, Kicker));
+    DriveController.povDown().toggleOnTrue(new InstantCommand(() -> {iWantToShoot = !iWantToShoot;}));
+
   }
 
   public Command getAutonomousCommand() {
