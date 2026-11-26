@@ -1,4 +1,4 @@
-package frc.robot.Shooter;
+package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

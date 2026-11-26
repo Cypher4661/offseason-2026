@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Shooter.ShooterSubsystem;
-import frc.robot.Shooter.KickerSubsystem;
-import frc.robot.Shooter.Commands.ShooterCommand;
+import frc.robot.subsystems.Shooter.ShooterSubsystem;
+import frc.robot.subsystems.Shooter.KickerSubsystem;
+import frc.robot.subsystems.Shooter.Commands.ShooterCommand;
 public class RobotContainer implements Sendable{
   public static ChassisSubsystem Chassis = new ChassisSubsystem();
   public CommandXboxController DriveController = new CommandXboxController(0);

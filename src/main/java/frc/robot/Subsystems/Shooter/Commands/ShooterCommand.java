@@ -1,4 +1,4 @@
-package frc.robot.Shooter.Commands;
+package frc.robot.subsystems.Shooter.Commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -6,10 +6,10 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotDataCenter;
-import frc.robot.Shooter.ShooterSubsystem;
-import frc.robot.Shooter.KickerSubsystem;
+import frc.robot.subsystems.Shooter.ShooterSubsystem;
+import frc.robot.subsystems.Shooter.KickerSubsystem;
 // import frc.robot.Subsystems.led.ledSubsystem;
-import frc.robot.Shooter.ShooterConstants;
+import frc.robot.subsystems.Shooter.ShooterConstants;
 
 public class ShooterCommand extends Command {
   private final ShooterSubsystem shooter;
