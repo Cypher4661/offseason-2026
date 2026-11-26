@@ -43,12 +43,18 @@ public class RobotDataCenter implements Sendable {
     }
 
     public enum State {
-        NONE, INTAKE, SHOOT_HUB, SHOOT_DELIVERY, 
+        NONE, INTAKE, SHOOT_HUB, SHOOT_DELIVERY, SHOOT_TOWER, SHOOT_TEST, 
     }
 
     public enum CastomState {
         NONE, SHOOT_TEST, SHOOT_TOWER, EMERGENCY_STOP
     }
+
+
+
+
+
+
 
     public static Pose2d currentPose = null;
     public static ChassisSpeeds robotSpeeds = null;
@@ -67,6 +73,7 @@ public class RobotDataCenter implements Sendable {
     public static Rotation2d hubRotation = null;
 
     public static final RobotDataCenter instance = new RobotDataCenter();
+
 
     private RobotDataCenter() {
         SmartDashboard.putData("Robot Data Center", this);
