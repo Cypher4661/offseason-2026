@@ -1,9 +1,9 @@
 package frc.robot;
 
 import frc.robot.commands.Swerve.ChassisDrive;
-import frc.robot.subsystems.Vision2DConfidence;
-import frc.robot.subsystems.Vision2DSubsystem;
 import frc.robot.subsystems.Swerve.ChassisSubsystem;
+import frc.robot.subsystems.vision.Vision2DConfidence;
+import frc.robot.subsystems.vision.Vision2DSubsystem;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
