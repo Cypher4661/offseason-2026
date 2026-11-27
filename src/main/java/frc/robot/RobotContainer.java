@@ -6,8 +6,12 @@ import frc.robot.commands.Swerve.ChassisDrive;
 import frc.robot.subsystems.Swerve.ChassisSubsystem;
 import frc.robot.subsystems.vision.Vision2DConfidence;
 import frc.robot.subsystems.vision.Vision2DSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -32,6 +36,7 @@ public class RobotContainer implements Sendable{
   public static double CYCLE_TIME = 0.02;
   public static boolean openIntake = false;
   public static boolean spinIntake = false;
+  private final SendableChooser<Command> autoChooser;
   
 
 
@@ -39,18 +44,21 @@ public class RobotContainer implements Sendable{
 
   public RobotContainer() {
     configureBindings();
+      autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("RobotContainer", this);
     Vision2DBag = new Vision2DSubsystem(Constants.VisionConstants.flywheelCameraBag);
-    visionConfidence = new Vision2DConfidence(Vision2DBag, Vision2DBag);
+    visionConfidence = new Vision2DConfidence(Vision2DBag, Vision2DBag, chassis);
     shooter = new ShooterSubsystem();
     kicker = new KickerSubsystem();
     intake = new IntakeSubsystem();
     indexer = new IndexerSubsystem();
     chassis.setDefaultCommand(new ChassisDrive(chassis, DriveController));
-    shooter.setDefaultCommand(new ShooterCommand(shooter, iWantToShoot));
-    indexer.setDefaultCommand(new indexerKickerCommand(indexer, kicker, iWantToShoot));
+    shooter.setDefaultCommand(new ShooterCommand(shooter));
+    indexer.setDefaultCommand(new indexerKickerCommand(indexer, kicker));
     intake.setDefaultCommand(new intakeCommand(intake, openIntake, spinIntake));
+
     
   }
 
@@ -61,7 +69,7 @@ public class RobotContainer implements Sendable{
   }
 
   public Command getAutonomousCommand() {
-    return chassis.followAuto(null);
+    return autoChooser.getSelected();
   }
 
   @Override

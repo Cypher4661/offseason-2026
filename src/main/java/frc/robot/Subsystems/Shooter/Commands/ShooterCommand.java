@@ -6,6 +6,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.RobotDataCenter;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.Shooter.KickerSubsystem;
@@ -22,16 +23,16 @@ public class ShooterCommand extends Command {
   ChassisSpeeds speeds;
   private boolean iWantToShoot;
 
-  public ShooterCommand(ShooterSubsystem shooter, boolean iWantToShoot) {
+  public ShooterCommand(ShooterSubsystem shooter) {
     super();
     this.shooter = shooter;
-    this.iWantToShoot = iWantToShoot;
     addRequirements(shooter);
     SmartDashboard.putData("Shooter Command", this);
   }
 
   @Override
   public void execute() {
+    iWantToShoot = RobotContainer.iWantToShoot;
     if (RobotDataCenter.isAuto) {
       targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
       targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(RobotDataCenter.hubDistance);

@@ -154,7 +154,7 @@ public Translation2d getVisionPose() {
         Rotation2d.fromDegrees(camToTagYaw + camera.getYaw()));
     // Add camera offset to get robot center to tag vector
     robotToTag = (camera.getbotPose().toTranslation2d()
-        .plus(cameraToTag));
+        .plus(cameraToTag).rotateBy(Chassis.getInstance().getGyroAngle()));
         //.rotateBy(Chassis.getInstance().getGyroAngle());
     return robotToTag;
   }

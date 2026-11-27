@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Swerve.ChassisSubsystem;
 
 public class Vision2DConfidence extends SubsystemBase {
   /** Creates a new Vision2DConfidence. */
@@ -24,12 +25,13 @@ public class Vision2DConfidence extends SubsystemBase {
   public Pose2d pose;
   public Vision2DSubsystem camera1;
   public Vision2DSubsystem camera2;
-  
+  public ChassisSubsystem chassis;
 
-  public Vision2DConfidence(Vision2DSubsystem camera1, Vision2DSubsystem camera2) {
+  public Vision2DConfidence(Vision2DSubsystem camera1, Vision2DSubsystem camera2, ChassisSubsystem chassis) {
     super();
     this.camera1 = camera1;
     this.camera2 = camera2;
+    this.chassis = chassis;
     camField = new Field2d();
     pose = new Pose2d();
     SmartDashboard.putData("Vision", this);
@@ -51,7 +53,7 @@ public class Vision2DConfidence extends SubsystemBase {
         return;
       }
       camField.setRobotPose(pose);
-      //chassis.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latency / 1000.0 - 0.01);
+      chassis.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latency / 1000.0 - 0.01);
     }
 
   }
@@ -85,7 +87,7 @@ public class Vision2DConfidence extends SubsystemBase {
     double c1 = confidence1 / confidence;
     double c2 = confidence2 / confidence;
     return new Pose2d(camera1.pose.getX() * c1 + camera2.pose.getX() * c2,
-        camera1.pose.getY() * c1 + camera2.pose.getY() * c2, new Rotation2d(0.0));
+        camera1.pose.getY() * c1 + camera2.pose.getY() * c2, new Rotation2d(chassis.getPose().getRotation().getRadians()));
     //chassis.getPose().getRotation()
   }
 

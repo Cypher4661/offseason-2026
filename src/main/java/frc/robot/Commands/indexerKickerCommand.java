@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.RobotDataCenter;
 import frc.robot.subsystems.Indexer.IndexerSubsystem;
 import frc.robot.subsystems.Shooter.KickerSubsystem;
@@ -14,7 +15,7 @@ public class indexerKickerCommand extends Command {
   IndexerSubsystem indexer;
   KickerSubsystem kicker;
   boolean iWantToShoot;
-  public indexerKickerCommand(IndexerSubsystem indexer, KickerSubsystem kicker, boolean iWantToShoot) {
+  public indexerKickerCommand(IndexerSubsystem indexer, KickerSubsystem kicker) {
     addRequirements(indexer, kicker);
     this.indexer = indexer;
     this.kicker = kicker;
@@ -30,6 +31,7 @@ public class indexerKickerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    iWantToShoot = RobotContainer.iWantToShoot;
     if (iWantToShoot && RobotDataCenter.isReadyToShoot && RobotDataCenter.isTunind){
       indexer.setLeftMotorPower(0.5);
       kicker.setKickerPower(0.5);
