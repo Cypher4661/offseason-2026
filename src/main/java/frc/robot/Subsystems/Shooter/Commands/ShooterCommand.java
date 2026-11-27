@@ -38,63 +38,64 @@ public class ShooterCommand extends Command {
       shooter.setShooterVelocity(targetSpeed);
       shooter.setAngleDeg(targetAngle);
 
-    }
-    else if (iWantToShoot) {
-      switch (RobotDataCenter.state) {
-        case SHOOT_HUB:
-          if (RobotDataCenter.canShootHub()) {
+    } else if (iWantToShoot) {
+      switch (RobotDataCenter.castomState) {
+        case NONE:
+          if (RobotDataCenter.area == RobotDataCenter.Area.ALLIANCE) {
+            if (RobotDataCenter.canShootHub()) {
+              targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
+              targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(RobotDataCenter.hubDistance);
+              RobotDataCenter.state = RobotDataCenter.State.SHOOT_HUB;
+            } else {
+              targetSpeed = 0.0;
+              targetAngle = ShooterConstants.Angle.minimumDegree;
+
+            }
+          } else {
+            RobotDataCenter.hubDistance = RobotDataCenter.hubDistance + 1.5;
             targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
             targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(RobotDataCenter.hubDistance);
-
-          } 
-          else {
-            targetSpeed = 0.0;
-            targetAngle = ShooterConstants.Angle.minimumDegree;
-
+            RobotDataCenter.state = RobotDataCenter.State.SHOOT_DELIVERY;
           }
 
-          break;
-        case SHOOT_DELIVERY:
-          if (RobotDataCenter.area != RobotDataCenter.Area.ALLIANCE) {
-            RobotDataCenter.hubDistance = RobotDataCenter.hubDistance + 1.5; 
-            targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
-            targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(RobotDataCenter.hubDistance);
-          }
           break;
 
         case SHOOT_TOWER:
           if (RobotDataCenter.canShootHub()) {
             targetSpeed = 16;
             targetAngle = 66;
-
+            RobotDataCenter.state = RobotDataCenter.State.SHOOT_TOWER;
           }
           break;
         case SHOOT_TEST:
 
           targetSpeed = speed;
           targetAngle = angle;
-
+          RobotDataCenter.state = RobotDataCenter.State.SHOOT_TEST;
+          break;
+        case EMERGENCY_STOP:
+          shooter.stop();
+          targetAngle = ShooterConstants.Angle.minimumDegree;
+          targetSpeed = 0.0;
+          RobotDataCenter.state = RobotDataCenter.State.NONE;
           break;
         default:
           targetAngle = ShooterConstants.Angle.minimumDegree;
           targetSpeed = 0.0;
           break;
-     
-       
+
       }
       shooter.setShooterVelocity(targetSpeed);
       shooter.setAngleDeg(targetAngle);
-      RobotDataCenter.isReadyToShoot = shooter.isAtTargetVelocityLookUp(targetSpeed) && shooter.attargetAngleLookUp(targetAngle);
-    }
-    else{
+      RobotDataCenter.isReadyToShoot = shooter.isAtTargetVelocityLookUp(targetSpeed)
+          && shooter.attargetAngleLookUp(targetAngle);
+    } else {
       targetAngle = ShooterConstants.Angle.minimumDegree;
       targetSpeed = 0.0;
       shooter.setShooterVelocity(targetSpeed);
       shooter.setAngleDeg(targetAngle);
       RobotDataCenter.isReadyToShoot = false;
     }
-    
-
 
   }
 

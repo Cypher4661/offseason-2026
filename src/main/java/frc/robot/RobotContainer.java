@@ -67,6 +67,10 @@ public class RobotContainer implements Sendable{
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("RobotContainer");
     builder.addBooleanProperty("isRed", () -> RobotDataCenter.getIsRed(), null);
+    builder.addStringProperty("iWantToShoot", () -> String.valueOf(iWantToShoot), null);
+    builder.addStringProperty("openIntake", () -> String.valueOf(openIntake), null);
+    builder.addStringProperty("spinIntake", () -> String.valueOf(spinIntake), null);
+
   }
 }
 

@@ -47,7 +47,7 @@ public class RobotDataCenter implements Sendable {
     }
 
     public enum CastomState {
-        NONE, SHOOT_TEST, SHOOT_TOWER, EMERGENCY_STOP
+        NONE, SHOOT_TEST, SHOOT_TOWER, EMERGENCY_STOP, 
     }
 
 

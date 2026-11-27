@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotDataCenter;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -32,6 +33,7 @@ public class intakeCommand extends Command {
       intake.setOpeningMotorPosition(Math.toRadians(90));
       if (spinIntake) {
         intake.setLeftMotorPower(0.5);
+        RobotDataCenter.state = RobotDataCenter.State.INTAKE;
       } else {
         intake.setLeftMotorPower(0);
       }
