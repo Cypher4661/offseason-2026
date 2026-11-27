@@ -198,11 +198,11 @@ public class ChassisSubsystem extends SubsystemBase {
             double wanted_angle = toHub.getAngle().minus(getHeading()).getRadians();
 
             speeds.omegaRadiansPerSecond = wanted_angle * 2;
-            RobotContainer.isTunind = Math.abs(wanted_angle) < Math.toRadians(5);
+            RobotDataCenter.isTunind = Math.abs(wanted_angle) < Math.toRadians(10);
 
         }
         else{
-            RobotContainer.isTunind = false;
+            RobotDataCenter.isTunind = false;
         }
         
         if (Math.abs(speeds.vxMetersPerSecond) < 0.01 && Math.abs(speeds.vyMetersPerSecond) < 0.01
@@ -294,7 +294,7 @@ public class ChassisSubsystem extends SubsystemBase {
         return new Translation2d(current_Vx + X_Accel * 0.02, current_Vy + Y_Accel * 0.02);
     }
     public boolean isRed() {
-        return RobotContainer.isRed;
+        return RobotDataCenter.getIsRed();
     }
 
     @Override

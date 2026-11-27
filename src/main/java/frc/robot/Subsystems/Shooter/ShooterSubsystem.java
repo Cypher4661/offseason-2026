@@ -16,12 +16,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  private final MotorInterface 
-      shooterMotorLeft1,
-      shooterMotorRight1,
-      shooterMotorLeft2,
-      shooterMotorRight2 ,
-      angleMotor;
+  private final MotorInterface shooterMotorLeft1,shooterMotorRight1,shooterMotorLeft2,shooterMotorRight2,angleMotor;
   private final DutyCycleEncoder Encoder;
   public boolean isShooting = false, isCalibrated = false;
   public double distanceFromHub, targetVelocity, targetAngle, x, y;
@@ -29,43 +24,26 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     super();
 
-
     this.angleMotor = ShooterConstants.Angle.angleMotor;
-
     this.shooterMotorLeft1 = ShooterConstants.Shooter.shooterMotorLeft1;
-
     this.shooterMotorRight1 = ShooterConstants.Shooter.shooterMotorRight1;
     ((TalonFX) this.shooterMotorRight1).setControl(new Follower(ShooterConstants.Shooter.shooterMotorLeft1Config.id, MotorAlignmentValue.Opposed));
-
     this.shooterMotorLeft2 = ShooterConstants.Shooter.shooterMotorLeft2;
     ((TalonFX) this.shooterMotorLeft2).setControl(new Follower(ShooterConstants.Shooter.shooterMotorLeft1Config.id, MotorAlignmentValue.Aligned));
-
     this.shooterMotorRight2 = ShooterConstants.Shooter.shooterMotorRight2;
     ((TalonFX) this.shooterMotorRight2).setControl(new Follower(ShooterConstants.Shooter.shooterMotorLeft1Config.id, MotorAlignmentValue.Opposed));
-
     Encoder = new DutyCycleEncoder(0);
-
-    
     SmartDashboard.putData("Shooter", this);
   }
 
-  public boolean IsOperating(boolean isOperating) {
-    if (isShooting) {
-      setShooterPower(0.0);
-      angleMotor.stop();
-    }
-    this.isShooting = isOperating;
-    return this.isShooting;
-  }
+
 
   public void stop() {
     shooterMotorLeft1.stop();
     angleMotor.stop();
     isShooting = false;
   }
-   // public boolean stopShooterNow() {
-    //return SmartDashboard.getBoolean("stop", false);
-  //}
+
   public boolean isAtTargetVelocityLookUp(double targetVelocity) {
     double currentVelocity = shooterMotorLeft1.getCurrentVelocity();
     this.targetVelocity = targetVelocity;
@@ -76,9 +54,11 @@ public class ShooterSubsystem extends SubsystemBase {
     double currentVelocity = shooterMotorLeft1.getCurrentVelocity();
     return Math.abs(currentVelocity - this.targetVelocity) <= ShooterConstants.Shooter.tolaranceVelocity;
   }
+
   public double getCurrentVelocity() {
     return shooterMotorLeft1.getCurrentVelocity();
   }
+
   public void setShooterPower(double power) {
     shooterMotorLeft1.setDuty(power);
   }
@@ -101,7 +81,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private static double safeAngleRange(double targetAngle, double min, double max) {
     return Math.max(min, Math.min(max, targetAngle));
   }
-public boolean attargetAngleLookUp(double targetAngle) {
+
+  public boolean attargetAngleLookUp(double targetAngle) {
     return Math.abs(getAngleDeg() - targetAngle) <= ShooterConstants.Angle.toleranceAngle;
   }
 
@@ -114,7 +95,7 @@ public boolean attargetAngleLookUp(double targetAngle) {
   }
 
   public double getAbsoluteAngle() {
-    return Math.toDegrees(Math.toRadians(Encoder.get() * 360.0) * (19.0 / 184.0));
+    return (Encoder.get() * 360.0) * (ShooterConstants.Angle.gearRatio);
   }
 
   public void calibrateFromEncoder() {
@@ -136,7 +117,7 @@ public boolean attargetAngleLookUp(double targetAngle) {
   }
 
   public double getDistanceFromHub() {
-return RobotDataCenter.hubDistance ;
+    return RobotDataCenter.hubDistance;
   }
 
   public double getRobotX() {
@@ -146,48 +127,26 @@ return RobotDataCenter.hubDistance ;
   public double getRobotY() {
     return y;
   }
-  
+
   @Override
   public void periodic() {
-  calibrateFromEncoder();
+    calibrateFromEncoder();
     getDistanceFromHub();
   }
-  // public void setShooterMotorLeft1Power(double power) {
-  // this.shooterMotorLeft1.setDuty(power);
-  // }
 
-  // public void setShooterMotorLeft1Position(double position) {
-  // this.shooterMotorLeft1.setPositionVoltage(position);
-  // }
-
-  // public double getShooterMotorLeft1Position() {
-  // return this.shooterMotorLeft1.getCurrentPosition();
-  // }
-
-  // public void setShooterMotorLeft1EncoderPosition(double position) {
-  // this.shooterMotorLeft1.setEncoderPosition(position);
-  // }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
-    // builder.addDoubleProperty("Left Position",
-    // this::getShooterMotorLeft1Position, null);
-    // builder.addDoubleProperty("Absolute Encoder Angle", this::getAbsoluteEnAngle,
-    // null);
+
     builder.addDoubleProperty("TargetVelocity", () -> this.targetVelocity, this::setShooterVelocity);
-
-    builder.addBooleanProperty("ShooterIsOperating", () -> this.isShooting, this::IsOperating);
-    // builder.addBooleanProperty("ShooterIsOperating", () -> this.IsOperating(this.isShooting), (value) -> this.isShooting = this.IsOperating(value));
-
-     builder.addDoubleProperty("CurrentVelocity", this::getCurrentVelocity, null);
+    builder.addDoubleProperty("CurrentVelocity", this::getCurrentVelocity, null);
     builder.addBooleanProperty("isAtTargetVelocity", this::isAtTargetVelocity, null);
     builder.addBooleanProperty("isAtTargetAngle", this::attargetAngle, null);
     builder.addDoubleProperty("CurrentAngle", this::getAngleDeg, null);
     builder.addDoubleProperty("AbsoluteAngle", this::getAbsoluteAngle, null);
     builder.addBooleanProperty("EncoderConnected", this::isEncoderConnected, null);
     builder.addDoubleProperty("Distance from Hub", this::getDistanceFromHub, null);
-   // builder.addBooleanProperty("stopShooter", this::stopShooterNow, null);
+    // builder.addBooleanProperty("stopShooter", this::stopShooterNow, null);
   }
 }
-

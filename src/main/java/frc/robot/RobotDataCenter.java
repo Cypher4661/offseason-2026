@@ -71,6 +71,8 @@ public class RobotDataCenter implements Sendable {
     public static double hubDistance = 0;
     public static double hubHeading = 0;
     public static Rotation2d hubRotation = null;
+    public static boolean isReadyToShoot = false;
+    public static boolean isTunind = false;
 
     public static final RobotDataCenter instance = new RobotDataCenter();
 
