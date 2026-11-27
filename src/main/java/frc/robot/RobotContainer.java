@@ -40,6 +40,7 @@ public class RobotContainer implements Sendable{
   public RobotContainer() {
     configureBindings();
     SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
+    SmartDashboard.putData("RobotContainer", this);
     Vision2DBag = new Vision2DSubsystem(Constants.VisionConstants.flywheelCameraBag);
     visionConfidence = new Vision2DConfidence(Vision2DBag, Vision2DBag);
     shooter = new ShooterSubsystem();
