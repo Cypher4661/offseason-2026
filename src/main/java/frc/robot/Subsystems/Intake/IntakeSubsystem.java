@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -63,5 +64,6 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     calibrateOpeningMotorFromEncoder();
+    SmartDashboard.putNumber(" abs Intake", getEncoderAbsoluteAngle());
   }
 }

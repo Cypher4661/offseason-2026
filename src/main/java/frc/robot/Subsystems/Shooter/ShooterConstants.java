@@ -33,9 +33,9 @@ public class ShooterConstants {
     public static final double maximumDegree = 73.1;
     public static final double toleranceAngle = 2.0;
     public static final double offsetAngle = -70.5;
-    public static final double gearRatio = 1;
+    public static final double gearRatio = 8;
     public static final SparkMaxConfig angleMotorConfig = new SparkMaxConfig(26, "Angle")
-        .withCanbus(Canbus.CANIvore)
+        
         .withRadiansMotor(gearRatio)
         .withBrake(true)
         .withInvert(false)

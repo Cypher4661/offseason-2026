@@ -95,7 +95,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getAbsoluteAngle() {
-    return (Encoder.get() * 360.0) * (ShooterConstants.Angle.gearRatio);
+    return (Encoder.get() * 360.0) / (ShooterConstants.Angle.gearRatio);
   }
 
   public void calibrateFromEncoder() {
