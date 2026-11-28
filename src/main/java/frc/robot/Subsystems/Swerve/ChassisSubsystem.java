@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Swerve;
+package frc.robot.Subsystems.Swerve;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
