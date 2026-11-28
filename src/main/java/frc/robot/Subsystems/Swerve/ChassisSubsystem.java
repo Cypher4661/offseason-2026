@@ -1,6 +1,6 @@
 package frc.robot.Subsystems.Swerve;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+//import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -45,8 +45,8 @@ public class ChassisSubsystem extends SubsystemBase {
     public SwerveModule FL;
     public SwerveModule BL;
     public SwerveModule BR;
-    //public Pigeon Gyro;
-    public Pigeon2 Gyro2;
+    public Pigeon Gyro;
+    //public Pigeon2 Gyro2;
 
     public ChassisSubsystem() {
         super();
@@ -63,9 +63,9 @@ public class ChassisSubsystem extends SubsystemBase {
             new Translation2d(-SwerveConstants.ChassisConstants.X_Y, -SwerveConstants.ChassisConstants.X_Y)
         });
 
-        Gyro2 = new Pigeon2(13, SwerveConstants.ChassisConstants.cypherCANivore);
-        // Gyro = new Pigeon (new PigeonConfig(SwerveConstants.ChassisConstants.GyroID, 
-        // SwerveConstants.ChassisConstants.cypherCANivore, "Chassis_Gyro"));
+        //Gyro2 = new Pigeon2(13, SwerveConstants.ChassisConstants.cypherCANivore);
+        Gyro = new Pigeon (new PigeonConfig(SwerveConstants.ChassisConstants.GyroID, 
+        SwerveConstants.ChassisConstants.CANBUS, "Chassis_Gyro"));
 
         PoseEstimator = new SwerveDrivePoseEstimator(Kinematics, getGyroAngle(), getModulePositions(), pose);
 
@@ -255,7 +255,8 @@ public class ChassisSubsystem extends SubsystemBase {
         return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelSpeeds, getHeading());
     }
     public Rotation2d getGyroAngle() {
-        return Rotation2d.fromRadians(Gyro2.getYaw().getValueAsDouble());
+        return Rotation2d.fromRadians(Gyro.getCurrentYaw());
+        //return Rotation2d.fromRadians(Gyro2.getYaw().getValueAsDouble());
     }
     public Rotation2d getHeading() {
         return pose.getRotation();

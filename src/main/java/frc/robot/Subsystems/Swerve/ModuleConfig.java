@@ -22,10 +22,11 @@ public class ModuleConfig {
     public double CanCoderOffset;
     public boolean IsDriveInverted;
     public boolean IsSteerInverted;
-    public CANBus cypherCANivore;
+    //public CANBus cypherCANivore;
+    public Canbus canbus;
     public Translation2d posion = Translation2d.kZero;
 
-    public ModuleConfig(String name, int moduleID, int driveID, int steerID, int canCoderID, double diameter, double canCoderOffset, CANBus cypherCANivore) {
+    public ModuleConfig(String name, int moduleID, int driveID, int steerID, int canCoderID, double diameter, double canCoderOffset, Canbus canbuse) {
         this.Name = name;
         this.ModuleID = moduleID;
         this.DriveID = driveID;
@@ -33,7 +34,8 @@ public class ModuleConfig {
         this.CanCoderID = canCoderID;
         this.Diameter = diameter;
         this.CanCoderOffset = canCoderOffset;
-        this.cypherCANivore = cypherCANivore;
+        this.canbus = canbuse;
+        //this.cypherCANivore = cypherCANivore;
 
         DriveConfig = new TalonFXConfig(driveID, Canbus.CANIvore, name + " Drive")
             .withBrake(true)

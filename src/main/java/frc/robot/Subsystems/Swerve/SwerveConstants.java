@@ -19,10 +19,10 @@ public class SwerveConstants {
 
     public static class ChassisConstants {
         public static final ModuleConfig[] ModulesConfig = {
-            new ModuleConfig("Front_Right", ChassisConstants.FR_ModulesID, ChassisConstants.FR_DriveID, ChassisConstants.FR_SteerID, ChassisConstants.FR_CancoderID, ModuleConstants.Diameter, ModuleConstants.FR_CancoderOffset, ChassisConstants.cypherCANivore),
-            new ModuleConfig("Front_Left", ChassisConstants.FL_ModulesID, ChassisConstants.FL_DriveID, ChassisConstants.FL_SteerID, ChassisConstants.FL_CancoderID, ModuleConstants.Diameter, ModuleConstants.FL_CancoderOffset, ChassisConstants.cypherCANivore),
-            new ModuleConfig("Back_Left", ChassisConstants.BL_ModulesID, ChassisConstants.BL_DriveID, ChassisConstants.BL_SteerID, ChassisConstants.BL_CancoderID, ModuleConstants.Diameter, ModuleConstants.BL_CancoderOffset, ChassisConstants.cypherCANivore),
-            new ModuleConfig("Back_Right", ChassisConstants.BR_ModulesID, ChassisConstants.BR_DriveID, ChassisConstants.BR_SteerID, ChassisConstants.BR_CancoderID, ModuleConstants.Diameter, ModuleConstants.BR_CancoderOffset, ChassisConstants.cypherCANivore)
+            new ModuleConfig("Front_Right", ChassisConstants.FR_ModulesID, ChassisConstants.FR_DriveID, ChassisConstants.FR_SteerID, ChassisConstants.FR_CancoderID, ModuleConstants.Diameter, ModuleConstants.FR_CancoderOffset, ChassisConstants.CANBUS),
+            new ModuleConfig("Front_Left", ChassisConstants.FL_ModulesID, ChassisConstants.FL_DriveID, ChassisConstants.FL_SteerID, ChassisConstants.FL_CancoderID, ModuleConstants.Diameter, ModuleConstants.FL_CancoderOffset, ChassisConstants.CANBUS),
+            new ModuleConfig("Back_Left", ChassisConstants.BL_ModulesID, ChassisConstants.BL_DriveID, ChassisConstants.BL_SteerID, ChassisConstants.BL_CancoderID, ModuleConstants.Diameter, ModuleConstants.BL_CancoderOffset, ChassisConstants.CANBUS),
+            new ModuleConfig("Back_Right", ChassisConstants.BR_ModulesID, ChassisConstants.BR_DriveID, ChassisConstants.BR_SteerID, ChassisConstants.BR_CancoderID, ModuleConstants.Diameter, ModuleConstants.BR_CancoderOffset, ChassisConstants.CANBUS)
         };
         public static final int FR_ModulesID = 1;
         public static final int FL_ModulesID = 2;
@@ -46,6 +46,8 @@ public class SwerveConstants {
         public static final double Max_Linear_Acceleration = 7.0; // in meters per second squared
         public static final double Max_Rotation_Speed = 3.0; // in radians per second
         public static final double Deadband = 0.08; // joystick deadband
-        public static final CANBus cypherCANivore = new CANBus("canivoreCypher");
+        public static final Canbus CANBUS = Canbus.Rio;
+        //public static final CANBus cypherCANivore = new CANBus("canivoreCypher");
+
     }
 }
