@@ -39,6 +39,7 @@ public class KickerSubsystem extends SubsystemBase {
   }
   @Override
   public void initSendable(SendableBuilder builder) {
+    super.initSendable(builder);
     builder.addDoubleProperty("kicker-Power", () -> SmartDashboard.getNumber("kicker-Power", 0.0), this::setKickerPower);
   }
 }
