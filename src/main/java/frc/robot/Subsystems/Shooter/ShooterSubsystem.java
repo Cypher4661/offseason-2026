@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Shooter;
+package frc.robot.Subsystems.Shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.SendableBuilder;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Indexer;
+package frc.robot.Subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.motors.MotorInterface;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.Subsystems.Intake;
 
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.SparkMaxConfig;

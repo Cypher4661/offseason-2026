@@ -1,11 +1,12 @@
 package frc.robot;
 
-import frc.robot.commands.indexerKickerCommand;
-import frc.robot.commands.intakeCommand;
-import frc.robot.commands.Swerve.ChassisDrive;
-import frc.robot.subsystems.Swerve.ChassisSubsystem;
-import frc.robot.subsystems.vision.Vision2DConfidence;
-import frc.robot.subsystems.vision.Vision2DSubsystem;
+import frc.robot.Commands.Indexer.indexerKickerCommand;
+import frc.robot.Commands.Intake.intakeCommand;
+import frc.robot.Commands.Shooter.ShooterCommand;
+import frc.robot.Commands.Swerve.ChassisDrive;
+import frc.robot.Subsystems.Swerve.ChassisSubsystem;
+import frc.robot.Subsystems.vision.Vision2DConfidence;
+import frc.robot.Subsystems.vision.Vision2DSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -17,11 +18,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Shooter.ShooterSubsystem;
-import frc.robot.subsystems.Indexer.IndexerSubsystem;
-import frc.robot.subsystems.Intake.IntakeSubsystem;
-import frc.robot.subsystems.Shooter.KickerSubsystem;
-import frc.robot.subsystems.Shooter.Commands.ShooterCommand;
+import frc.robot.Subsystems.Shooter.ShooterSubsystem;
+import frc.robot.Subsystems.Indexer.IndexerSubsystem;
+import frc.robot.Subsystems.Intake.IntakeSubsystem;
+import frc.robot.Subsystems.Shooter.KickerSubsystem;
 public class RobotContainer implements Sendable{
   public static ChassisSubsystem chassis = new ChassisSubsystem();
   public CommandXboxController DriveController = new CommandXboxController(0);

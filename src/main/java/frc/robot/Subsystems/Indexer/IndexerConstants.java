@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Indexer;
+package frc.robot.Subsystems.Indexer;
 
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.SparkMaxConfig;
