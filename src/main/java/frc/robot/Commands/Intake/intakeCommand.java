@@ -12,12 +12,10 @@ import frc.robot.Subsystems.Intake.IntakeSubsystem;
 public class intakeCommand extends Command {
   /** Creates a new intake. */
   private final IntakeSubsystem intake;
-  private final boolean openIntake;
-  private final boolean spinIntake;
-  public intakeCommand(IntakeSubsystem intake, boolean openIntake, boolean spinIntake) {
+ 
+  public intakeCommand(IntakeSubsystem intake) {
     this.intake = intake;
-    this.openIntake = openIntake;
-    this.spinIntake = spinIntake;
+
 
     addRequirements(intake);
   }
@@ -29,9 +27,9 @@ public class intakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (openIntake) {
+    if (RobotDataCenter.openIntake) {
       intake.setOpeningMotorPosition(Math.toRadians(90));
-      if (spinIntake) {
+      if (RobotDataCenter.spinIntake) {
         intake.setLeftMotorPower(0.5);
         RobotDataCenter.state = RobotDataCenter.State.INTAKE;
       } else {

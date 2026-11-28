@@ -32,7 +32,7 @@ public class ShooterCommand extends Command {
 
   @Override
   public void execute() {
-    iWantToShoot = RobotContainer.iWantToShoot;
+    iWantToShoot = RobotDataCenter.iWantToShoot;
     if (RobotDataCenter.isAuto) {
       targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
       targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(RobotDataCenter.hubDistance);
@@ -53,9 +53,9 @@ public class ShooterCommand extends Command {
 
             }
           } else {
-            RobotDataCenter.hubDistance = RobotDataCenter.hubDistance + 1.5;
-            targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(RobotDataCenter.hubDistance);
-            targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(RobotDataCenter.hubDistance);
+            double dis = RobotDataCenter.hubDistance + 1.5;
+            targetSpeed = ShooterConstants.velocityLookup.distanceToVelocity.get(dis);
+            targetAngle = ShooterConstants.ShooterLookup.distanceToAngleDeg.get(dis);
             RobotDataCenter.state = RobotDataCenter.State.SHOOT_DELIVERY;
           }
 
@@ -89,7 +89,7 @@ public class ShooterCommand extends Command {
       shooter.setShooterVelocity(targetSpeed);
       shooter.setAngleDeg(targetAngle);
       RobotDataCenter.isReadyToShoot = shooter.isAtTargetVelocityLookUp(targetSpeed)
-          && shooter.attargetAngleLookUp(targetAngle);
+          && shooter.attargetAngleLookUp(targetAngle) && RobotDataCenter.iWantToShoot;
     } else {
       targetAngle = ShooterConstants.Angle.minimumDegree;
       targetSpeed = 0.0;

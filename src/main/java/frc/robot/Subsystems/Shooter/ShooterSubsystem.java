@@ -32,7 +32,7 @@ public class ShooterSubsystem extends SubsystemBase {
     ((TalonFX) this.shooterMotorLeft2).setControl(new Follower(ShooterConstants.Shooter.shooterMotorLeft1Config.id, MotorAlignmentValue.Aligned));
     this.shooterMotorRight2 = ShooterConstants.Shooter.shooterMotorRight2;
     ((TalonFX) this.shooterMotorRight2).setControl(new Follower(ShooterConstants.Shooter.shooterMotorLeft1Config.id, MotorAlignmentValue.Opposed));
-    Encoder = new DutyCycleEncoder(1);
+    Encoder = new DutyCycleEncoder(8);
     SmartDashboard.putData("Shooter", this);
   }
 

@@ -198,11 +198,11 @@ public class ChassisSubsystem extends SubsystemBase {
             double wanted_angle = toHub.getAngle().minus(getHeading()).getRadians();
 
             speeds.omegaRadiansPerSecond = wanted_angle * 2;
-            RobotDataCenter.isTunind = Math.abs(wanted_angle) < Math.toRadians(10);
+            RobotDataCenter.isShootingHeadingOK = Math.abs(wanted_angle) < Math.toRadians(10);
 
         }
         else{
-            RobotDataCenter.isTunind = false;
+            RobotDataCenter.isShootingHeadingOK = false;
         }
         
         if (Math.abs(speeds.vxMetersPerSecond) < 0.01 && Math.abs(speeds.vyMetersPerSecond) < 0.01
@@ -304,7 +304,7 @@ public class ChassisSubsystem extends SubsystemBase {
         PoseEstimator.update(gyro, getModulePositions());
         pose = PoseEstimator.getEstimatedPosition();
         Field.setRobotPose(pose);
-        PreparingToShoot = RobotContainer.iWantToShoot;
+        PreparingToShoot = RobotDataCenter.iWantToShoot;
     }
 
     @Override

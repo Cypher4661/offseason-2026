@@ -25,6 +25,6 @@ public class IntakeConstants {
   public static final TalonFXConfig rightMotorConfig = new TalonFXConfig(32, Canbus.Rio, "rightMotor").withBrake(true).withInvert(false);
 
 
-  public static final int encoderChannel = 0;
+  public static final int encoderChannel = 9;
 
 }

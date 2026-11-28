@@ -32,10 +32,9 @@ public class RobotContainer implements Sendable{
   private final IntakeSubsystem intake;
   private final IndexerSubsystem indexer;
   public static Robot robot;
-  public static boolean iWantToShoot = false;
+  
   public static double CYCLE_TIME = 0.02;
-  public static boolean openIntake = false;
-  public static boolean spinIntake = false;
+
   private final SendableChooser<Command> autoChooser;
   
 
@@ -57,15 +56,15 @@ public class RobotContainer implements Sendable{
     chassis.setDefaultCommand(new ChassisDrive(chassis, DriveController));
     shooter.setDefaultCommand(new ShooterCommand(shooter));
     indexer.setDefaultCommand(new indexerKickerCommand(indexer, kicker));
-    intake.setDefaultCommand(new intakeCommand(intake, openIntake, spinIntake));
+    intake.setDefaultCommand(new intakeCommand(intake));
 
     
   }
 
   private void configureBindings() {
-    DriveController.rightBumper().toggleOnTrue(new InstantCommand(() -> {iWantToShoot = !iWantToShoot;}));
-    DriveController.leftBumper().toggleOnTrue(new InstantCommand(() -> {openIntake = !openIntake;}));
-    DriveController.a().toggleOnTrue(new InstantCommand(() -> {spinIntake = !spinIntake;}));
+    DriveController.rightBumper().toggleOnTrue(new InstantCommand(() -> {RobotDataCenter.iWantToShoot = !RobotDataCenter.iWantToShoot;}));
+    DriveController.leftBumper().toggleOnTrue(new InstantCommand(() -> {RobotDataCenter.openIntake = !RobotDataCenter.openIntake;}));
+    DriveController.a().toggleOnTrue(new InstantCommand(() -> {RobotDataCenter.spinIntake = !RobotDataCenter.spinIntake;}));
   }
 
   public Command getAutonomousCommand() {
@@ -76,9 +75,9 @@ public class RobotContainer implements Sendable{
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("RobotContainer");
     builder.addBooleanProperty("isRed", () -> RobotDataCenter.getIsRed(), null);
-    builder.addStringProperty("iWantToShoot", () -> String.valueOf(iWantToShoot), null);
-    builder.addStringProperty("openIntake", () -> String.valueOf(openIntake), null);
-    builder.addStringProperty("spinIntake", () -> String.valueOf(spinIntake), null);
+    builder.addStringProperty("iWantToShoot", () -> String.valueOf(RobotDataCenter.iWantToShoot), null);
+    builder.addStringProperty("openIntake", () -> String.valueOf(RobotDataCenter.openIntake), null);
+    builder.addStringProperty("spinIntake", () -> String.valueOf(RobotDataCenter.spinIntake), null);
 
   }
 }

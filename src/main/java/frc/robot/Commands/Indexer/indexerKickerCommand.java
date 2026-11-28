@@ -31,8 +31,8 @@ public class indexerKickerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    iWantToShoot = RobotContainer.iWantToShoot;
-    if (iWantToShoot && RobotDataCenter.isReadyToShoot && RobotDataCenter.isTunind){
+    iWantToShoot = RobotDataCenter.iWantToShoot;
+    if (iWantToShoot && RobotDataCenter.isReadyToShoot && RobotDataCenter.isShootingHeadingOK){
       indexer.setLeftMotorPower(0.5);
       kicker.setKickerPower(0.5);
     }
